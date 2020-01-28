@@ -1,8 +1,10 @@
-// Time slots
-var timeSlots = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
+// Time slots -- in 24-hour format
+// var timeSlots = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
+// var timeSlots = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+var timeSlots = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
 // Create a time slot and display it
-function renderOneHourlyTimeBlock (inputTime) {
+function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     // As a first step, create one new row and display it
     var newRow = $("<div>");
     newRow.attr("class", "row")
@@ -16,16 +18,16 @@ function renderOneHourlyTimeBlock (inputTime) {
     newTimeCol.attr("class", "col-1 hour");
 
     var newTimeLabel = $("<label>");
-    newTimeLabel.text(inputTime);
+    newTimeLabel.text(inputTime12Hour);
     newTimeCol.append(newTimeLabel);
     
     // Create a column for the appointment description
     var newAppointmentCol = $("<div>");
-    newAppointmentCol.attr("class", "col-8 description d-flex");
+    newAppointmentCol.attr("class", "col-8 description d-flex " + pastPresentFuture);
     var newAppointmentFormGroup = $("<div>"); 
     newAppointmentFormGroup.attr("class", "form-group");
     var newTextArea = $("<textarea>");
-    newTextArea.attr("class", "form-control");
+    newTextArea.attr("class", "form-control " + pastPresentFuture);
     newAppointmentCol.append(newTextArea);
     
     // Create a column for the save button
@@ -57,9 +59,19 @@ function renderOneHourlyTimeBlock (inputTime) {
 
 // Create all of the time slots and display them
 function renderAllHourlyTimeBlocks() {
+    // Get the current hour of the day in 24-hour format
+    var currentHour = moment().hour();
+
     // Create a row for each entry in timeSlots
     for (slot in timeSlots) {
-        renderOneHourlyTimeBlock(timeSlots[slot]);
+        // Time slot in the past
+        if (timeSlots[slot] < currentHour) {
+            renderOneHourlyTimeBlock(timeSlots[slot], "past");
+        } else if (timeSlots[slot] === currentHour) {  // Time slot is the present
+            renderOneHourlyTimeBlock(timeSlots[slot], "present");
+        } else { // Time slot is in the future
+            renderOneHourlyTimeBlock(timeSlots[slot], "future");
+        }
     }
 }
 
@@ -67,7 +79,11 @@ function renderAllHourlyTimeBlocks() {
 function initializeScreen() {
     // Create the hourly time blocks and display them
     renderAllHourlyTimeBlocks();
+
+    // Get the current date and display it -- in format day, month digits
+    $("#currentDay").text(moment().format('dddd') + ", " + moment().format('MMMM') + ' ' + moment().format('Do'));
 }
+
 // On page load --
 // - Create the hourly time blocks and display them
 // - Load any existing appointments and display them in the time blocks
