@@ -224,6 +224,7 @@ init();
 
 
 // to do:
+// - Readme
 // - Fix background turning white when typing in text aread
 // - Use consts for past, present, future class names
 });
