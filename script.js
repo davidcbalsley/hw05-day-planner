@@ -2,7 +2,7 @@
 var timeSlots = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
 
 // Create a time slot and display it
-function renderOneHourlyTimeBlock () {
+function renderOneHourlyTimeBlock (inputTime) {
     // As a first step, create one new row and display it
     var newRow = $("<div>");
     newRow.attr("class", "row")
@@ -14,10 +14,19 @@ function renderOneHourlyTimeBlock () {
     // Create a column for the time
     var newTimeCol = $("<div>");
     newTimeCol.attr("class", "col-1 hour");
+
+    var newTimeLabel = $("<label>");
+    newTimeLabel.text(inputTime);
+    newTimeCol.append(newTimeLabel);
     
     // Create a column for the appointment description
     var newAppointmentCol = $("<div>");
-    newAppointmentCol.attr("class", "col-8 description");
+    newAppointmentCol.attr("class", "col-8 description d-flex");
+    var newAppointmentFormGroup = $("<div>"); 
+    newAppointmentFormGroup.attr("class", "form-group");
+    var newTextArea = $("<textarea>");
+    newTextArea.attr("class", "form-control");
+    newAppointmentCol.append(newTextArea);
     
     // Create a column for the save button
     var newSaveCol = $("<div>");
@@ -43,13 +52,24 @@ function renderOneHourlyTimeBlock () {
     newRow.append(newLeftBufferCol, newTimeCol, newAppointmentCol, newSaveCol);
     
     // Append the row 
-    // $("#hourly-time-blocks").append(newRow);
     $("#hourly-time-blocks").append(newRow);
 }
 
 // Create all of the time slots and display them
+function renderAllHourlyTimeBlocks() {
+    // Create a row for each entry in timeSlots
+    for (slot in timeSlots) {
+        renderOneHourlyTimeBlock(timeSlots[slot]);
+    }
+}
 
+// 
+function initializeScreen() {
+    // Create the hourly time blocks and display them
+    renderAllHourlyTimeBlocks();
+}
 // On page load --
 // - Create the hourly time blocks and display them
 // - Load any existing appointments and display them in the time blocks
-renderOneHourlyTimeBlock();
+// renderAllHourlyTimeBlocks();
+initializeScreen();
