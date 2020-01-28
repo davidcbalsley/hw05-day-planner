@@ -14,7 +14,7 @@ function putAppointmentInLocalStorage() {
     var correspondingTextArea;  // Text area for the appointment description
     var appointmentDescription; // The text that the user entered for the appointment description                 
 
-    // Get the timeslot from the 
+    // Get the timeslot from the button
     timeSlot = $(this).attr("data-timeslot");
 
     // Find the text area with a matching time slot
@@ -41,9 +41,6 @@ function putAppointmentInLocalStorage() {
 
     // Store the appointment in local storage
     localStorage.setItem("appointments", JSON.stringify(appointments)); 
-    // var bgColor = localStorage.getItem("bgColor"); // debug
-    // localStorage.setItem("bgColor", "red"); // debug
-    // console.log // debug
 }
 
 // Adding click event listeners to all elements with a class of "btn-save" -- all of the save buttons
@@ -77,6 +74,21 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     newTextArea.attr("data-timeslot", inputTime12Hour);
     newAppointmentCol.append(newTextArea);
     
+    // If the appointment is in local storage, populate the text area with the description
+    if (appointments && (appointments.length > 0)) {
+        // Look for the current time label in the appointments array
+        // If it's found, return the index into the array for the corresponding object
+        var indexForCurrentTime = appointments.findIndex(function(item) {
+            return item.time === inputTime12Hour;
+        });
+
+        // If the current label was found in the appointments array, get the description
+        // from the oject and update the text area with it
+        if (indexForCurrentTime >= 0) {
+            newTextArea.text(appointments[indexForCurrentTime].description);
+        }
+    }
+
     // Create a column for the save button
     var newSaveCol = $("<div>");
     newSaveCol.attr("class", "col-1 saveBtn d-flex");
@@ -152,7 +164,17 @@ function renderAllHourlyTimeBlocks() {
 }
 
 // 
-function initializeScreen() {
+function init() { 
+    var storedAppointments = [];  // Array to hold appointments in local storage
+
+    // Get stored appointments from local storage
+    storedAppointments = JSON.parse(localStorage.getItem("appointments"));
+
+    // If appointments were retrieved from localStorage, update the appointments array to it
+    if (storedAppointments !== null) {
+       appointments = storedAppointments;
+    }
+
     // Create the hourly time blocks and display them
     renderAllHourlyTimeBlocks();
 
@@ -160,18 +182,14 @@ function initializeScreen() {
     $("#currentDay").text(moment().format('dddd') + ", " + moment().format('MMMM') + ' ' + moment().format('Do'));
 }
 
-
-
 // On page load --
 // - Create the hourly time blocks and display them
 // - Load any existing appointments and display them in the time blocks
 // renderAllHourlyTimeBlocks();
-initializeScreen();
+init();
 
 
 // to do:
-// - Save appointment description when save button pressed
-// - Render appointments, loading from local storage
 // - Fix background turning white when typing in text aread
 // - Use consts for past, present, future class names
 // - Delete appointment description in local storage
