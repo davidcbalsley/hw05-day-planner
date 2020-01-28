@@ -57,20 +57,45 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     $("#hourly-time-blocks").append(newRow);
 }
 
+// Get a 12-hour format for hour, including AM and PM, for a 24-hour hour
+function getTwelveHourFromTwentyFourHour(twentyFourHourInput) {
+
+    var twelveHourFormat = "";
+
+    if (twentyFourHourInput === 0) {  // Midnight
+        twelveHourFormat = "12AM";
+    } else if (twentyFourHourInput <= 11) {  // Morning
+        twelveHourFormat = twentyFourHourInput + "AM";
+    } else if (twentyFourHourInput === 12) {  // Noon
+        twelveHourFormat = "12PM";
+    }
+    else { // Afternoon and evening 
+        twelveHourFormat = (twentyFourHourInput - 12) + "PM"; 
+    }
+
+    return twelveHourFormat;
+}
+
 // Create all of the time slots and display them
 function renderAllHourlyTimeBlocks() {
+    var twelveHourLabel = "";   // A 12-hour formatted time label
+    var currentHour = 0;        // The current hour of the day, in 24-hour format 
+
     // Get the current hour of the day in 24-hour format
-    var currentHour = moment().hour();
+    currentHour = moment().hour();
 
     // Create a row for each entry in timeSlots
     for (slot in timeSlots) {
+        // Get the 12-hour formatted version of the hour in the time slot
+        twelveHourLabel = getTwelveHourFromTwentyFourHour(timeSlots[slot]);
+
         // Time slot in the past
         if (timeSlots[slot] < currentHour) {
-            renderOneHourlyTimeBlock(timeSlots[slot], "past");
+            renderOneHourlyTimeBlock(twelveHourLabel, "past");
         } else if (timeSlots[slot] === currentHour) {  // Time slot is the present
-            renderOneHourlyTimeBlock(timeSlots[slot], "present");
+            renderOneHourlyTimeBlock(twelveHourLabel, "present");
         } else { // Time slot is in the future
-            renderOneHourlyTimeBlock(timeSlots[slot], "future");
+            renderOneHourlyTimeBlock(twelveHourLabel, "future");
         }
     }
 }
