@@ -19,13 +19,14 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     newTimeLabel.text(inputTime12Hour);
     newTimeCol.append(newTimeLabel);
     
-    // Create a column for the appointment description
+    // Create a column and text area for the appointment description
     var newAppointmentCol = $("<div>");
     newAppointmentCol.attr("class", "col-8 description d-flex " + pastPresentFuture);
     var newAppointmentFormGroup = $("<div>"); 
     newAppointmentFormGroup.attr("class", "form-group");
     var newTextArea = $("<textarea>");
     newTextArea.attr("class", "form-control " + pastPresentFuture);
+    newTextArea.attr("data-timeslot", inputTime12Hour);
     newAppointmentCol.append(newTextArea);
     
     // Create a column for the save button
@@ -35,6 +36,7 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     // Create a new save button
     var newSaveBtn = $("<button>");
     newSaveBtn.attr("class", "btn btn-block");
+    newTextArea.attr("data-timeslot", inputTime12Hour);
 
     // Add the lock icon to the button
     var newButtonLabel = $("<span>");
@@ -57,17 +59,20 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
 
 // Get a 12-hour format for hour, including AM and PM, for a 24-hour hour
 function getTwelveHourFromTwentyFourHour(twentyFourHourInput) {
-    var twelveHourFormat = "";  // A 12-hour formatted hour of the day
+    var twelveHourFormat = "";  // The hour of the day, in 12-hour format
 
-    if (twentyFourHourInput === 0) {  // Midnight
-        twelveHourFormat = "12AM";
-    } else if (twentyFourHourInput <= 11) {  // Morning
-        twelveHourFormat = twentyFourHourInput + "AM";
-    } else if (twentyFourHourInput === 12) {  // Noon
-        twelveHourFormat = "12PM";
-    }
-    else { // Afternoon and evening 
-        twelveHourFormat = (twentyFourHourInput - 12) + "PM"; 
+    if ((Number.isInteger(twentyFourHourInput) &&
+        (twentyFourHourInput >= 0) &&
+        (twentyFourHourInput <= 23))) {
+        if (twentyFourHourInput === 0) {  // Midnight
+            twelveHourFormat = "12AM";
+        } else if (twentyFourHourInput <= 11) {  // Morning
+            twelveHourFormat = twentyFourHourInput + "AM";
+        } else if (twentyFourHourInput === 12) {  // Noon
+            twelveHourFormat = "12PM";
+        } else { // Afternoon and evening 
+            twelveHourFormat = (twentyFourHourInput - 12) + "PM"; 
+        }
     }
 
     return twelveHourFormat;
@@ -114,8 +119,9 @@ initializeScreen();
 
 
 // to do:
-// - Assign data to text fields and buttons
 // - Save appointment description when save button pressed
 // - Render appointments, loading from local storage
 // - Fix background turning white when typing in text aread
 // - Change time slots
+// - Use consts for past, present, future class names
+// - 
