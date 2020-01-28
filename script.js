@@ -1,5 +1,53 @@
+$(document).ready(function() {
+
 // Time slots -- in 24-hour format
 var timeSlots = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+
+var appointments = [];
+
+// Store appointment in local storage
+function putAppointmentInLocalStorage() {
+    var timeSlot;               // The time slot associated with the button that the user clicked
+    var saveButtonDiv;          // The div that is the parent to the button
+    var textAreaDiv;            // The div that is the immediate previous sibling to the 
+                                // save button div -- i.e., the div for the appointment description
+    var correspondingTextArea;  // Text area for the appointment description
+    var appointmentDescription; // The text that the user entered for the appointment description                 
+
+    // Get the timeslot from the 
+    timeSlot = $(this).attr("data-timeslot");
+
+    // Find the text area with a matching time slot
+    // First, find the parent div for the save button
+    saveButtonDiv = $(this).parent();
+    
+    // Next, get the div for the appointment description text area
+    textAreaDiv = saveButtonDiv.prev();
+    
+    // Lastly, get the text area itself
+    correspondingTextArea = textAreaDiv.children().first();
+
+    // Get the text that the user entered for the appointment description
+    appointmentDescription = correspondingTextArea.val();
+
+    // Store the appointment description in local storage; use the timeslot as a label
+    // Create appointment object from appointment
+    var appointment = {
+        time: timeSlot,
+        description: appointmentDescription.trim()
+    };
+
+    appointments.push(appointment);
+
+    // Store the appointment in local storage
+    localStorage.setItem("appointments", JSON.stringify(appointments)); 
+    // var bgColor = localStorage.getItem("bgColor"); // debug
+    // localStorage.setItem("bgColor", "red"); // debug
+    // console.log // debug
+}
+
+// Adding click event listeners to all elements with a class of "btn-save" -- all of the save buttons
+$(document).on("click", ".btn-save", putAppointmentInLocalStorage);
 
 // Create a time slot and display it
 function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
@@ -35,8 +83,9 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
 
     // Create a new save button
     var newSaveBtn = $("<button>");
-    newSaveBtn.attr("class", "btn btn-block");
-    newTextArea.attr("data-timeslot", inputTime12Hour);
+    newSaveBtn.attr("class", "btn btn-block btn-save");
+    newSaveBtn.attr("type", "button");
+    newSaveBtn.attr("data-timeslot", inputTime12Hour);
 
     // Add the lock icon to the button
     var newButtonLabel = $("<span>");
@@ -51,7 +100,7 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     newRightBufferCol.attr("class", "col-1");
 
     // Append the time, description, and save button to the row
-    newRow.append(newLeftBufferCol, newTimeCol, newAppointmentCol, newSaveCol);
+    newRow.append(newLeftBufferCol, newTimeCol, newAppointmentCol, newSaveCol, newRightBufferCol);
     
     // Append the row 
     $("#hourly-time-blocks").append(newRow);
@@ -111,6 +160,8 @@ function initializeScreen() {
     $("#currentDay").text(moment().format('dddd') + ", " + moment().format('MMMM') + ' ' + moment().format('Do'));
 }
 
+
+
 // On page load --
 // - Create the hourly time blocks and display them
 // - Load any existing appointments and display them in the time blocks
@@ -122,6 +173,6 @@ initializeScreen();
 // - Save appointment description when save button pressed
 // - Render appointments, loading from local storage
 // - Fix background turning white when typing in text aread
-// - Change time slots
 // - Use consts for past, present, future class names
-// - 
+// - Delete appointment description in local storage
+});
