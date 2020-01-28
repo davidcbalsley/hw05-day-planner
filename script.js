@@ -37,7 +37,42 @@ function putAppointmentInLocalStorage() {
         description: appointmentDescription.trim()
     };
 
-    appointments.push(appointment);
+    // Check whether time slot is already in appointments array
+    if (appointments && (appointments.length > 0)) {
+        // Look for the current time label in the appointments array
+        // If it's found, return the index into the array for the corresponding object
+        var indexForNewAppointment = appointments.findIndex(function(item) {
+            return item.time === timeSlot;
+        });
+
+        // If there already is an entry in local storage for the given time slot
+        if (indexForNewAppointment >= 0) {
+            var newAppointments = [];  // New temporary array, to hold some values from appointments array
+
+            // Copy the elements from appointments that precede the found object into the temporary array
+            for (var i = 0; i < indexForNewAppointment; i++) {
+                newAppointments.push(appointments[i]);
+            }
+
+            // Copy the elements from appointments that follow the found object into the temporary array
+            for (var j = indexForNewAppointment + 1; j < appointments.length; j++) {
+                newAppointments.push(appointments[j]);
+            }
+
+            // Point appointments to our new temporary array, if it exists, or to an empty array
+            if (newAppointments && (newAppointments.length > 0)) {
+                appointments = newAppointments;
+            } else {
+                appointments = [];
+            }
+
+            localStorage.removeItem("appointments");
+        }
+    }
+
+    if (appointment.description.length > 0) {
+        appointments.push(appointment);
+    }
 
     // Store the appointment in local storage
     localStorage.setItem("appointments", JSON.stringify(appointments)); 
@@ -163,7 +198,9 @@ function renderAllHourlyTimeBlocks() {
     }
 }
 
-// 
+// - Create the hourly time blocks and display them
+// - Load any existing appointments and display them in the time blocks
+// - Get the current date and display it
 function init() { 
     var storedAppointments = [];  // Array to hold appointments in local storage
 
@@ -183,14 +220,10 @@ function init() {
 }
 
 // On page load --
-// - Create the hourly time blocks and display them
-// - Load any existing appointments and display them in the time blocks
-// renderAllHourlyTimeBlocks();
 init();
 
 
 // to do:
 // - Fix background turning white when typing in text aread
 // - Use consts for past, present, future class names
-// - Delete appointment description in local storage
 });
