@@ -1,7 +1,5 @@
 // Time slots -- in 24-hour format
-// var timeSlots = ["9AM", "10AM", "11AM", "12PM", "1PM", "2PM", "3PM", "4PM", "5PM"];
-// var timeSlots = [9, 10, 11, 12, 13, 14, 15, 16, 17];
-var timeSlots = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+var timeSlots = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
 // Create a time slot and display it
 function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
@@ -59,8 +57,7 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
 
 // Get a 12-hour format for hour, including AM and PM, for a 24-hour hour
 function getTwelveHourFromTwentyFourHour(twentyFourHourInput) {
-
-    var twelveHourFormat = "";
+    var twelveHourFormat = "";  // A 12-hour formatted hour of the day
 
     if (twentyFourHourInput === 0) {  // Midnight
         twelveHourFormat = "12AM";
@@ -114,3 +111,11 @@ function initializeScreen() {
 // - Load any existing appointments and display them in the time blocks
 // renderAllHourlyTimeBlocks();
 initializeScreen();
+
+
+// to do:
+// - Assign data to text fields and buttons
+// - Save appointment description when save button pressed
+// - Render appointments, loading from local storage
+// - Fix background turning white when typing in text aread
+// - Change time slots
