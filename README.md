@@ -5,8 +5,12 @@ This repository houses the files that implement an online password generator.
 
 ### Purpose
 
+This website 
+
 ### Functionality
 
 ### Concepts and techniques
+* Using the Moment.js library to format dates
+* Using indexOf
 
 https://davidcbalsley.github.io/hw05-day-planner/
