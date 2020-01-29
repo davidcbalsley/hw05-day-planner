@@ -9,4 +9,4 @@ This repository houses the files that implement an online password generator.
 
 ### Concepts and techniques
 
-link
+https://davidcbalsley.github.io/hw05-day-planner/
