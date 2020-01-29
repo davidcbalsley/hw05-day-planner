@@ -102,8 +102,6 @@ function renderOneHourlyTimeBlock (inputTime12Hour, pastPresentFuture) {
     // Create a column and text area for the appointment description
     var newAppointmentCol = $("<div>");
     newAppointmentCol.attr("class", "col-8 description d-flex " + pastPresentFuture);
-    var newAppointmentFormGroup = $("<div>"); 
-    newAppointmentFormGroup.attr("class", "form-group");
     var newTextArea = $("<textarea>");
     newTextArea.attr("class", "form-control " + pastPresentFuture);
     newTextArea.attr("data-timeslot", inputTime12Hour);
@@ -222,9 +220,7 @@ function init() {
 // On page load --
 init();
 
-
 // to do:
-// - Readme
 // - Fix background turning white when typing in text aread
 // - Use consts for past, present, future class names
 });
